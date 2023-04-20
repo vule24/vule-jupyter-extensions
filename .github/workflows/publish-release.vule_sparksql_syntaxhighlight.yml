@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./vule_sparksql_syntaxhighlight
+        working-directory: vule_sparksql_syntaxhighlight
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
