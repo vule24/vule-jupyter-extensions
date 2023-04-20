@@ -1,0 +1,41 @@
+name: "Publish Release vule-sparkmagic"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (x.x.x)"
+        required: true
+
+jobs:
+  build_and_publish_stable:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./vule_sparkmagic
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install --upgrade setuptools wheel requests
+
+      - name: Checkout last passing commit
+        uses: actions/checkout@v3
+
+      - name: Update __VERSION__
+        run: python ./scripts/update_version.py --version ${{ github.event.inputs.version }}
+
+      - name: Build stable distribution
+        run: |
+          rm -rf dist/*
+          python setup.py sdist bdist_wheel
+
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
