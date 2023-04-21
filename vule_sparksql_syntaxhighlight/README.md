@@ -1,7 +1,7 @@
 # vule_sparksql_syntaxhighlight
 
-[![Github Actions Status](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish.vule_sparksql_syntaxhighlight.yml/badge.svg
-)](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish.vule_sparksql_syntaxhighlight.yml)
+[![Github Actions Status](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish-release.vule_sparksql_syntaxhighlight.yml/badge.svg
+)](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish-release.vule_sparksql_syntaxhighlight.yml)
 SparkSQL syntax highlight for JupyterLab
 
 ## Requirements
