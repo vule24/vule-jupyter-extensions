@@ -3,4 +3,4 @@ node_modules
 **/lib
 **/package.json
 !/package.json
-vule_sparksql_syntaxhighlight
+vule_magics

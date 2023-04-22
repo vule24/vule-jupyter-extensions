@@ -7,9 +7,9 @@ node_modules/
 *.egg-info/
 .ipynb_checkpoints
 *.tsbuildinfo
-vule_sparksql_syntaxhighlight/labextension
+vule_magics/labextension
 # Version file is handled by hatchling
-vule_sparksql_syntaxhighlight/_version.py
+vule_magics/_version.py
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
