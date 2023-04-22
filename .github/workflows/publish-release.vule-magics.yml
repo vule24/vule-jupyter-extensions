@@ -1,11 +1,11 @@
-name: "Publish Release vule-sparksql-syntaxhighlight"
+name: "Publish Release vule-magics"
 
 on:
   workflow_dispatch:
     inputs:
       version:
         description: "Version"
-        default: "1.0.0"
+        default: "0.1.0"
         required: true
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./vule_sparksql_syntaxhighlight
+        working-directory: ./vule_sparkmagic
     steps:
       - uses: actions/checkout@v3
 

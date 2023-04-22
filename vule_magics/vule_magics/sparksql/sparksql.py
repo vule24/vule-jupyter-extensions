@@ -1,5 +1,5 @@
 from __future__ import print_function
-from IPython.core.magic import Magics, magics_class, line_magic, line_cell_magic, needs_local_scope
+from IPython.core.magic import Magics, magics_class, cell_magic, needs_local_scope
 from IPython.core.magic_arguments import argument, magic_arguments, parse_argstring
 from IPython.display import display, clear_output
 from pyspark.sql import SparkSession
@@ -8,7 +8,7 @@ from string import Formatter
 
 
 @magics_class
-class VuLeSparkMagic(Magics):
+class SparkSQL(Magics):
 
     @property
     def spark(self):
@@ -18,8 +18,8 @@ class VuLeSparkMagic(Magics):
     @magic_arguments()
     @argument('dataframe', metavar='DF', type=str, nargs='?')
     @argument('-n', '--num-rows', type=int, default=20)
-    @line_cell_magic
-    def sql(self, line, cell=None):
+    @cell_magic
+    def sql(self, line, cell):
         self._create_temp_view_for_available_dataframe()
         if cell is None:
             query_str = self._format_params(line)
@@ -36,9 +36,8 @@ class VuLeSparkMagic(Magics):
 
 
     @magic_arguments()
-    @argument('dataframe', metavar='DF', type=str, nargs=None)
     @argument('-n', '--num-rows', type=int, default=20)
-    @line_magic
+    @cell_magic
     def show(self, line):
         args = parse_argstring(self.sql, line)
         df = self.shell.user_ns.get(args.dataframe, None)
@@ -63,3 +62,5 @@ class VuLeSparkMagic(Magics):
                 continue
             params_values.update({param: value})
         return source.format(**params_values)
+
+

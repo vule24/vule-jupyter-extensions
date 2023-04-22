@@ -13,7 +13,9 @@ interface IMagicSyntax {
 
 const CellMagicSyntaxMap: IMagicSyntax = {
   default: 'text/x-ipython',
-  '%%sql': 'text/x-sparksql'
+  '%%sql': 'text/x-sparksql',
+  '%%sh': 'text/x-sh',
+  '%%bash': 'text/x-sh'
 };
 
 class SyntaxHighlighter {
@@ -82,7 +84,7 @@ class SyntaxHighlighter {
  * Activate extension
  */
 function activate(app: JupyterFrontEnd, tracker: INotebookTracker): void {
-  console.log('JupyterLab extension vule-sparksql-syntaxhighlight is activated!');
+  console.log('JupyterLab extension vule-sparkmagic is activated!');
   const sh = new SyntaxHighlighter(app, tracker);
   console.log('SyntaxHighlighter Loaded ', sh);
 }
@@ -91,7 +93,7 @@ function activate(app: JupyterFrontEnd, tracker: INotebookTracker): void {
  * Initialization data for the jupyterlab_spellchecker extension.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'vule-sparksql-syntaxhighlight:plugin',
+  id: 'vule-magics:plugin',
   autoStart: true,
   requires: [INotebookTracker],
   activate: activate

@@ -1,15 +1,15 @@
 {
-  "name": "vule-sparksql-syntaxhighlight",
+  "name": "vule-magics",
   "version": "0.1.0",
-  "description": "SparkSQL syntax highlight for JupyterLab",
+  "description": "JupyterLab MagicCommands Extension",
   "keywords": [
     "jupyter",
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/vule24/vule-jupyter-extensions",
+  "homepage": "https://github.com/github_username/vule-magics",
   "bugs": {
-    "url": "https://github.com/vule24/vule-jupyter-extensions/issues"
+    "url": "https://github.com/github_username/vule-magics/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -25,7 +25,7 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vule24/vule-jupyter-extensions.git"
+    "url": "https://github.com/github_username/vule-magics.git"
   },
   "scripts": {
     "build": "jlpm build:lib && jlpm build:labextension:dev",
@@ -37,7 +37,7 @@
     "clean": "jlpm clean:lib",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
     "clean:lintcache": "rimraf .eslintcache .stylelintcache",
-    "clean:labextension": "rimraf vule_sparksql_syntaxhighlight/labextension vule_sparksql_syntaxhighlight/_version.py",
+    "clean:labextension": "rimraf vule_magics/labextension vule_magics/_version.py",
     "clean:all": "jlpm clean:lib && jlpm clean:labextension && jlpm clean:lintcache",
     "eslint": "jlpm eslint:check --fix",
     "eslint:check": "eslint . --cache --ext .ts,.tsx",
@@ -88,7 +88,7 @@
   },
   "jupyterlab": {
     "extension": true,
-    "outputDir": "vule_sparksql_syntaxhighlight/labextension"
+    "outputDir": "vule_magics/labextension"
   },
   "eslintIgnore": [
     "node_modules",

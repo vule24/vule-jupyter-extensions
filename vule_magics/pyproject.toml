@@ -3,7 +3,7 @@ requires = ["hatchling>=1.4.0", "jupyterlab>=3.4.7,<4.0.0", "hatch-nodejs-versio
 build-backend = "hatchling.build"
 
 [project]
-name = "vule_sparksql_syntaxhighlight"
+name = "vule_magics"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.7"
@@ -33,24 +33,24 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["vule_sparksql_syntaxhighlight/labextension"]
+artifacts = ["vule_magics/labextension"]
 exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"vule_sparksql_syntaxhighlight/labextension" = "share/jupyter/labextensions/vule-sparksql-syntaxhighlight"
-"install.json" = "share/jupyter/labextensions/vule-sparksql-syntaxhighlight/install.json"
+"vule_magics/labextension" = "share/jupyter/labextensions/vule-magics"
+"install.json" = "share/jupyter/labextensions/vule-magics/install.json"
 
 [tool.hatch.build.hooks.version]
-path = "vule_sparksql_syntaxhighlight/_version.py"
+path = "vule_magics/_version.py"
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
-    "vule_sparksql_syntaxhighlight/labextension/static/style.js",
-    "vule_sparksql_syntaxhighlight/labextension/package.json",
+    "vule_magics/labextension/static/style.js",
+    "vule_magics/labextension/package.json",
 ]
-skip-if-exists = ["vule_sparksql_syntaxhighlight/labextension/static/style.js"]
+skip-if-exists = ["vule_magics/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 build_cmd = "build:prod"
@@ -60,7 +60,7 @@ npm = ["jlpm"]
 build_cmd = "install:extension"
 npm = ["jlpm"]
 source_dir = "src"
-build_dir = "vule_sparksql_syntaxhighlight/labextension"
+build_dir = "vule_magics/labextension"
 
 [tool.jupyter-releaser.options]
 version_cmd = "hatch version"

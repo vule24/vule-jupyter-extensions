@@ -1,8 +1,7 @@
-# vule_sparksql_syntaxhighlight
+# vule_magics
 
-[![Github Actions Status](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish-release.vule_sparksql_syntaxhighlight.yml/badge.svg
-)](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish-release.vule_sparksql_syntaxhighlight.yml)
-SparkSQL syntax highlight for JupyterLab
+[![Github Actions Status](https://github.com/github_username/vule-magics/workflows/Build/badge.svg)](https://github.com/github_username/vule-magics/actions/workflows/build.yml)
+JupyterLab MagicCommands Extension
 
 ## Requirements
 
@@ -13,7 +12,7 @@ SparkSQL syntax highlight for JupyterLab
 To install the extension, execute:
 
 ```bash
-pip install vule_sparksql_syntaxhighlight
+pip install vule_magics
 ```
 
 ## Uninstall
@@ -21,7 +20,7 @@ pip install vule_sparksql_syntaxhighlight
 To remove the extension, execute:
 
 ```bash
-pip uninstall vule_sparksql_syntaxhighlight
+pip uninstall vule_magics
 ```
 
 ## Contributing
@@ -36,7 +35,7 @@ The `jlpm` command is JupyterLab's pinned version of
 
 ```bash
 # Clone the repo to your local environment
-# Change directory to the vule_sparksql_syntaxhighlight directory
+# Change directory to the vule_magics directory
 # Install package in development mode
 pip install -e "."
 # Link your development version of the extension with JupyterLab
@@ -65,12 +64,12 @@ jupyter lab build --minimize=False
 ### Development uninstall
 
 ```bash
-pip uninstall vule_sparksql_syntaxhighlight
+pip uninstall vule_magics
 ```
 
 In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
 command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
-folder is located. Then you can remove the symlink named `vule-sparksql-syntaxhighlight` within that folder.
+folder is located. Then you can remove the symlink named `vule-magics` within that folder.
 
 ### Packaging the extension
 
