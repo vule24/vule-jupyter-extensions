@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./vule_sparkmagic
+        working-directory: ./vule_magics
     steps:
       - uses: actions/checkout@v3
 
