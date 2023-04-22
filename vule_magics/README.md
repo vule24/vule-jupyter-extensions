@@ -1,6 +1,6 @@
 # vule_magics
 
-[![Github Actions Status](https://github.com/github_username/vule-magics/workflows/Build/badge.svg)](https://github.com/github_username/vule-magics/actions/workflows/build.yml)
+[![Github Actions Status](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish-release.vule-magics.yml/badge.svg)](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish-release.vule-magics.yml)
 JupyterLab MagicCommands Extension
 
 ## Requirements

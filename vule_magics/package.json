@@ -7,9 +7,9 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/github_username/vule-magics",
+  "homepage": "https://github.com/vule24/vule-jupyter-extensions",
   "bugs": {
-    "url": "https://github.com/github_username/vule-magics/issues"
+    "url": "https://github.com/vule24/vule-jupyter-extensions/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
@@ -25,7 +25,7 @@
   "style": "style/index.css",
   "repository": {
     "type": "git",
-    "url": "https://github.com/github_username/vule-magics.git"
+    "url": "https://github.com/vule24/vule-jupyter-extensions.git"
   },
   "scripts": {
     "build": "jlpm build:lib && jlpm build:labextension:dev",
