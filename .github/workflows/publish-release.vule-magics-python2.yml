@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-  build_and_publish_stable:
+  publish_release:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -25,16 +25,15 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install --upgrade setuptools wheel requests
+          pip install --upgrade setuptools twine build
 
       - name: Update __VERSION__
         run: python ./scripts/update_version.py --version ${{ github.event.inputs.version }}
 
-      - name: Build stable distribution
+      - name: Publish the Python package
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          rm -rf dist/*
-          python setup.py sdist bdist_wheel
-      - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          python -m build
+          twine upload dist/*

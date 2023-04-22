@@ -12,7 +12,7 @@ setup(
     description="Jupyter Notebook Python2 MagicCommands",
     long_description="",
     long_description_content_type="text/markdown",
-    packages=["vule_magics"],
+    packages=["vule_magics", "scripts"],
     package_data={"scripts": ["__VERSION__"]},
     classifiers=[
         "Programming Language :: Python :: 2",
