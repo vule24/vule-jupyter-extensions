@@ -71,6 +71,7 @@ class SyntaxHighlighter {
     if (current_mode === 'null') {
       if (retry) {
         // putting at the end of execution queue to allow the CodeMirror mode to be updated
+        // this will be invoked as soon as possible
         setTimeout(() => this.highlight(cellEditor, false, mode), 0);
       }
       return;
