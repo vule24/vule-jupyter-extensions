@@ -103,8 +103,8 @@ def generate_output_widget(sdf, num_rows, export_table_name=None):
                     state['template'] = None
                 else:
                     state['template'] = 'plotly_dark'
-    except Exception() as err:
-        print(err)
+    except Exception as err:
+        state['template'] = None
     
     
     # elements
