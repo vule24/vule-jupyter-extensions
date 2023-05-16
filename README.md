@@ -18,3 +18,6 @@
     ```bash
     jupyter lab --watch
     ```
+
+1. Require
+`pandas, pyspark, plotly, ipywidget`

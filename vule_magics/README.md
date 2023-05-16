@@ -1,4 +1,4 @@
-# vule_magics
+# vule-magics
 
 [![Github Actions Status](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish-release.vule-magics.yml/badge.svg)](https://github.com/vule24/vule-jupyter-extensions/actions/workflows/publish-release.vule-magics.yml)
 JupyterLab MagicCommands Extension
@@ -12,7 +12,7 @@ JupyterLab MagicCommands Extension
 To install the extension, execute:
 
 ```bash
-pip install vule_magics
+pip install vule-magics
 ```
 
 ## Uninstall
@@ -20,7 +20,7 @@ pip install vule_magics
 To remove the extension, execute:
 
 ```bash
-pip uninstall vule_magics
+pip uninstall vule-magics
 ```
 
 ## Contributing
@@ -35,7 +35,7 @@ The `jlpm` command is JupyterLab's pinned version of
 
 ```bash
 # Clone the repo to your local environment
-# Change directory to the vule_magics directory
+# Change directory to the vule-magics directory
 # Install package in development mode
 pip install -e "."
 # Link your development version of the extension with JupyterLab
@@ -64,7 +64,7 @@ jupyter lab build --minimize=False
 ### Development uninstall
 
 ```bash
-pip uninstall vule_magics
+pip uninstall vule-magics
 ```
 
 In development mode, you will also need to remove the symlink created by `jupyter labextension develop`

@@ -120,17 +120,17 @@ def generate_output_widget(sdf, num_rows, export_table_name=None):
     btn_chart_line = w.Button(
         disabled=False,
         button_style='',
-        icon='chart-line',
+        icon='line-chart',
         layout=layout_btn_render_type)
     btn_chart_bar = w.Button(
         disabled=False,
         button_style='',
-        icon='chart-bar',
+        icon='bar-chart',
         layout=layout_btn_render_type)
     btn_chart_scatter = w.Button(
         disabled=False,
         button_style='',
-        icon='chart-scatter',
+        icon='scatter-chart',
         layout=layout_btn_render_type)
     btn_save_csv = w.Button(
         description='Save as CSV',
@@ -222,13 +222,13 @@ def generate_output_widget(sdf, num_rows, export_table_name=None):
                 ipd.clear_output(wait=True)
                 ipd.display(table_html) 
         else:
-            state['current_render'] = b.icon.split('-')[-1]
+            state['current_render'] = b.icon.split('-')[0]
             with console:
                 ipd.clear_output(wait=True)
                 ipd.display(console_box)
             plot(
                 output, 
-                current_render=b.icon.split('-')[-1],
+                current_render=state['current_render'],
                 template=state['template'],
                 dataframe=dataframe,
                 x=dropdown_x.value,

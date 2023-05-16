@@ -21,7 +21,7 @@ def load_ipython_extension(ipython):
             clearInterval(vuleWidgetIconUpdateEventId)
         }
         vuleWidgetIconUpdateEventId = setInterval(function () {
-            document.querySelectorAll(".fa-chart-scatter").forEach(element => {
+            document.querySelectorAll(".fa-scatter-chart").forEach(element => {
                 console.log(element);
                 let scatterIcon = `<span><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="13px" height="13px" viewBox="-0.5 -0.5 153 122" style="vertical-align: -1.5px"><defs/><g><rect x="0" y="0" width="20" height="120" rx="5" ry="5" fill="currentColor" pointer-events="all"/><ellipse cx="52" cy="65" rx="15" ry="15" fill="currentColor" pointer-events="all"/><ellipse cx="103" cy="59" rx="15" ry="15" fill="currentColor" pointer-events="all"/><ellipse cx="77" cy="20" rx="15" ry="15" fill="currentColor" pointer-events="all"/><ellipse cx="127.5" cy="17.5" rx="17.5" ry="17.5" fill="currentColor" pointer-events="all"/><rect x="67" y="35" width="20" height="150" rx="5" ry="5" fill="currentColor" transform="rotate(90,77,110)" pointer-events="all"/></g></svg></span>`;
                 element.parentNode.innerHTML = scatterIcon;
