@@ -23,6 +23,11 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
+    'ipywidgets == 7.7.2',
+    'jupyterlab-widgets == 1.1.4',
+    'pandas >= 2.0.0',
+    'plotly'
+
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 

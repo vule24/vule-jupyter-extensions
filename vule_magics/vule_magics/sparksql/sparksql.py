@@ -1,11 +1,10 @@
-from __future__ import print_function
 from IPython.core.magic import Magics, magics_class, cell_magic, line_magic
 from IPython.core.magic_arguments import argument, magic_arguments, parse_argstring
-from IPython import display
 from pyspark.sql import SparkSession
 from pyspark.sql.dataframe import DataFrame
 from string import Formatter
-import numpy as np
+
+import json
 
 from .widget import generate_output_widget, generate_classic_table
 
@@ -26,7 +25,7 @@ class SparkSQL(Magics):
         self.create_temp_view_for_available_dataframe()
         
         args = parse_argstring(self.sql, line)
-        query_str = self.format_fillin_pyvar(cell)
+        query_str = rf'{self.format_fillin_pyvar(cell)}'
         
         sdf = self.spark.sql(query_str)
         if args.dataframe:
@@ -37,7 +36,6 @@ class SparkSQL(Magics):
             return generate_classic_table(sdf, num_rows=args.num_rows)
 
 
-
     @magic_arguments()
     @argument('dataframe', metavar='DF', type=str, nargs='?')
     @argument('-n', '--num-rows', type=int, default=20)
@@ -45,15 +43,15 @@ class SparkSQL(Magics):
     @line_magic
     def show(self, line):
         args = parse_argstring(self.sql, line)
+        if not args.dataframe:
+            raise ValueError('dataframe is required. Eg. `%show <dataframe>`')
         sdf = self.shell.user_ns.get(args.dataframe, None)
-        try:
-            if not args.classic:
-                return generate_output_widget(sdf, num_rows=args.num_rows, export_table_name=args.dataframe)
-            else:
-                return generate_classic_table(sdf, num_rows=args.num_rows)
-        except AttributeError as err:
-            display(err)
-            print("Input dataframe is not existed")
+        if not sdf:
+            raise NameError(f"Name '{args.dataframe}' is not defined")
+        if not args.classic:
+            return generate_output_widget(sdf, num_rows=args.num_rows, export_table_name=args.dataframe)
+        else:
+            return generate_classic_table(sdf, num_rows=args.num_rows)
 
 
     def create_temp_view_for_available_dataframe(self):

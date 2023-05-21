@@ -1,11 +1,83 @@
+from IPython.core.magic import Magics, magics_class, cell_magic, line_magic
+from IPython.core.magic_arguments import argument, magic_arguments, parse_argstring
+from IPython import display as ipd
 from pathlib import Path
 from datetime import datetime
-import IPython.display as ipd
+from pyspark.sql import SparkSession
+from pyspark.sql.dataframe import DataFrame
+from google.colab import output as colab_output
+from string import Formatter
 import ipywidgets as w
 import pandas as pd
 import numpy as np
 import copy
+import time
+
 pd.options.plotting.backend = "plotly"
+
+def load_ipython_extension(ipython):
+    colab_output.enable_custom_widget_manager()
+    ipython.register_magics(SparkSQL)
+
+@magics_class
+class SparkSQL(Magics):
+
+    @property
+    def spark(self):
+        return SparkSession._instantiatedSession
+
+    @magic_arguments()
+    @argument('dataframe', metavar='DF', type=str, nargs='?')
+    @argument('-n', '--num-rows', type=int, default=100)
+    @argument('-c', '--classic', action='store_true', default=False)
+    @cell_magic
+    def sql(self, line, cell):
+        self.create_temp_view_for_available_dataframe()
+        
+        args = parse_argstring(self.sql, line)
+        query_str = rf'{self.format_fillin_pyvar(cell)}'
+        
+        sdf = self.spark.sql(query_str)
+        if args.dataframe:
+            self.shell.user_ns.update({args.dataframe: sdf})
+        if not args.classic:
+            return generate_output_widget(sdf, num_rows=args.num_rows, export_table_name=args.dataframe or None)
+        else:
+            return generate_classic_table(sdf, num_rows=args.num_rows)
+
+
+    @magic_arguments()
+    @argument('dataframe', metavar='DF', type=str, nargs='?')
+    @argument('-n', '--num-rows', type=int, default=20)
+    @argument('-c', '--classic', action='store_true', default=False)
+    @line_magic
+    def show(self, line):
+        args = parse_argstring(self.sql, line)
+        if not args.dataframe:
+            raise ValueError('dataframe is required. Eg. `%show <dataframe>`')
+        sdf = self.shell.user_ns.get(args.dataframe, None)
+        if not sdf:
+            raise NameError(f"Name '{args.dataframe}' is not defined")
+        if not args.classic:
+            return generate_output_widget(sdf, num_rows=args.num_rows, export_table_name=args.dataframe)
+        else:
+            return generate_classic_table(sdf, num_rows=args.num_rows)
+
+
+    def create_temp_view_for_available_dataframe(self):
+        for k, v in self.shell.user_ns.items():
+            v.createOrReplaceTempView(k) if isinstance(v, DataFrame) else None
+
+    def format_fillin_pyvar(self, source):
+        params = [fn for _, fn, _, _ in Formatter().parse(source) if fn]
+        params_values = {}
+        for param in params:
+            value = self.shell.user_ns.get(param, None)
+            if not value:
+                raise NameError("name '{}' is not defined".format(param))
+            params_values.update({param: value})
+        return source.format(**params_values) 
+
 
 def generate_classic_table(sdf, num_rows):
      with pd.option_context(
@@ -28,6 +100,7 @@ def generate_classic_table(sdf, num_rows):
                 .to_html() +
             "</div>"
         )
+
 
 def generate_table(sdf, num_rows):
     with pd.option_context(
@@ -72,8 +145,8 @@ def plot(output_widget, current_render, template, dataframe, x, y, agg, logx, lo
             plot_y = f'{agg}_{y}'
         
  
-    with output_widget:
-        ipd.clear_output(wait=True)
+    with output_widget:     
+        ipd.clear_output()
         fig = plot_df.plot(
             kind=current_render, 
             x=x,
@@ -84,6 +157,7 @@ def plot(output_widget, current_render, template, dataframe, x, y, agg, logx, lo
             fig.update_layout(xaxis_type="log")
         if logy:
             fig.update_layout(yaxis_type="log")
+        time.sleep(0.5) # wait for plotly completely ready before render
         ipd.display(fig)
 
 
@@ -91,25 +165,12 @@ def generate_output_widget(sdf, num_rows, export_table_name=None):
     dataframe, table_html = generate_table(sdf, num_rows=num_rows)
     state = dict(
         current_render='table',
-        template=None
+        template='plotly_dark' if colab_output.eval_js('document.documentElement.matches("[theme=dark]")') else None
     )
-    
-    try:
-        theme_file = Path.home()/r'.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings'
-        lines = theme_file.read_text().split('\n')
-        for line in lines:
-            if '"theme"' in line.strip():
-                if "JupyterLab Light" in line.strip():
-                    state['template'] = None
-                else:
-                    state['template'] = 'plotly_dark'
-    except Exception as err:
-        state['template'] = None
-    
     
     # elements
     layout_btn_render_type = w.Layout(
-        width='50px',
+        width='auto',
         margin='1px 2px 2px 2px')
  
     btn_table = w.Button(
@@ -120,17 +181,17 @@ def generate_output_widget(sdf, num_rows, export_table_name=None):
     btn_chart_line = w.Button(
         disabled=False,
         button_style='',
-        icon='chart-line',
+        icon='line-chart',
         layout=layout_btn_render_type)
     btn_chart_bar = w.Button(
         disabled=False,
         button_style='',
-        icon='chart-bar',
+        icon='bar-chart',
         layout=layout_btn_render_type)
     btn_chart_scatter = w.Button(
         disabled=False,
         button_style='',
-        icon='chart-scatter',
+        icon='scatter-chart',
         layout=layout_btn_render_type)
     btn_save_csv = w.Button(
         description='Save as CSV',
@@ -212,8 +273,9 @@ def generate_output_widget(sdf, num_rows, export_table_name=None):
     
     def on_btn_render_clicked(b):
         for btn in [btn_table, btn_chart_line, btn_chart_bar, btn_chart_scatter]:
-            btn.button_style=''
+            btn.button_style = ''
         b.button_style = 'warning'
+        ipd.display(ipd.Javascript("update_icon()"))
         
         if b.icon == 'table':
             with console:
@@ -222,7 +284,7 @@ def generate_output_widget(sdf, num_rows, export_table_name=None):
                 ipd.clear_output(wait=True)
                 ipd.display(table_html) 
         else:
-            state['current_render'] = b.icon.split('-')[-1]
+            state['current_render'] = b.icon.split('-')[0]
             with console:
                 ipd.clear_output(wait=True)
                 ipd.display(console_box)
@@ -274,5 +336,29 @@ def generate_output_widget(sdf, num_rows, export_table_name=None):
                 align_items='center',
             )
         ),
-        output
+        output,
+        w.HTML("""
+        <script>
+            function update_icon() {
+                setTimeout(function () {
+                    document.querySelectorAll(".fa-scatter-chart").forEach(element => {
+                        let scatterIcon = `<span style="vertical-align:middle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="11px" viewBox="0 0 15 11" version="1.1">
+                                                    <g id="surface1">
+                                                        <path fill="currentColor" d="M 0.0117188 0.0117188 L 0.976562 0.0117188 L 0.976562 10.960938 L 0.0117188 10.960938 Z M 0.0117188 0.0117188 "/>
+                                                        <path fill="currentColor" d="M 0.0117188 9.96875 L 14.964844 9.96875 L 14.964844 10.960938 L 0.0117188 10.960938 Z M 0.0117188 9.96875 "/>
+                                                        <path fill="currentColor" d="M 5.558594 7.476562 C 5.558594 6.652344 4.910156 5.984375 4.113281 5.984375 C 3.3125 5.984375 2.664062 6.652344 2.664062 7.476562 C 2.664062 8.304688 3.3125 8.972656 4.113281 8.972656 C 4.910156 8.972656 5.558594 8.304688 5.558594 7.476562 Z M 5.558594 7.476562 "/>
+                                                        <path fill="currentColor" d="M 7.730469 3.246094 C 7.730469 2.421875 7.082031 1.753906 6.28125 1.753906 C 5.484375 1.753906 4.835938 2.421875 4.835938 3.246094 C 4.835938 4.074219 5.484375 4.742188 6.28125 4.742188 C 7.082031 4.742188 7.730469 4.074219 7.730469 3.246094 Z M 7.730469 3.246094 "/>
+                                                        <path fill="currentColor" d="M 10.621094 6.484375 C 10.621094 5.660156 9.976562 4.988281 9.175781 4.988281 C 8.375 4.988281 7.730469 5.660156 7.730469 6.484375 C 7.730469 7.308594 8.375 7.976562 9.175781 7.976562 C 9.976562 7.976562 10.621094 7.308594 10.621094 6.484375 Z M 10.621094 6.484375 "/>
+                                                        <path fill="currentColor" d="M 12.792969 2.253906 C 12.792969 1.425781 12.144531 0.757812 11.347656 0.757812 C 10.546875 0.757812 9.898438 1.425781 9.898438 2.253906 C 9.898438 3.078125 10.546875 3.746094 11.347656 3.746094 C 12.144531 3.746094 12.792969 3.078125 12.792969 2.253906 Z M 12.792969 2.253906 "/>
+                                                    </g>
+                                                </svg>
+                                            </span>`
+                        element.parentNode.innerHTML = scatterIcon;
+                    });
+                }, 0)
+            }
+            update_icon()
+        </script>
+        """)
     ])

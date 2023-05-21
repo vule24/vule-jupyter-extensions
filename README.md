@@ -16,6 +16,7 @@
     ```
 1. Then run line to watch
     ```bash
+    jlpm watch
     jupyter lab --watch
     ```
 

@@ -1,11 +1,11 @@
 
-docker build -t spark-lab-test:latest .
-docker stop spark-python2-lab
-docker rm spark-python2-lab
-docker run -d \
+docker build -t sparklab-image:latest .
+docker stop sparklab-extension-dev
+docker rm sparklab-extension-dev
+docker run -it \
 		--restart unless-stopped \
-		--name spark-python2-lab \
+		--name sparklab-extension-dev \
 		-p 1234:8888 \
-		-p 1235:8889 \
-		-v $(pwd):/home/jovyan/work/ \
-		spark-lab-test:latest
+		-v $(pwd)/vule_magics:/home/jovyan/dev/ \
+		-w /home/jovyan/dev/ \
+		sparklab-image:latest bash
