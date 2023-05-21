@@ -25,7 +25,7 @@ classifiers = [
 dependencies = [
     'ipywidgets == 7.7.2',
     'jupyterlab-widgets == 1.1.4',
-    'pandas >= 2.0.0',
+    'pandas', # require 2.0.0
     'plotly'
 
 ]
